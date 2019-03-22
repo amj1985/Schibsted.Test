@@ -86,7 +86,7 @@ export function getUser(id) {
 }
 export function addUser(user) {
     return {
-        types: [ADD_USER_SUCCES, ADD_USER_SUCCESS, ADD_USER_FAIL],
+        types: [ADD_USER, ADD_USER_SUCCESS, ADD_USER_FAIL],
         promise: () => addUserApi(user),  
     }
 }

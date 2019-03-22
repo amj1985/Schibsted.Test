@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Schibsted.Test.BE.Business.Entities.DTO;
@@ -12,6 +13,7 @@ namespace Schibsted.Test.BE.API.Controllers
 {
 
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -89,7 +91,7 @@ namespace Schibsted.Test.BE.API.Controllers
                 return Forbid();
             }
         }
-        [Route("api/[controller]")]
+        [Route("api/[controller]/{id}")]
         [HttpDelete]
         public async Task<ActionResult> Delete(string id)
         {

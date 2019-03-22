@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Schibsted.Test.BE.API.Middleware;
 using Schibsted.Test.BE.Business.Implementation.Services;
 using Schibsted.Test.BE.Business.Interface.Repositories;
 using Schibsted.Test.BE.Business.Interface.Services;
@@ -44,6 +45,7 @@ namespace Schibsted.Test.BE.API
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<IAuthService, AuthService>();
+            services.AddAuthorization();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Things2Do.UserService.API", Version = "v1" });
@@ -71,6 +73,7 @@ namespace Schibsted.Test.BE.API
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
             app.UseMvc();
+            app.UseMiddleware<AuthorizationMiddleware>();
           
         }
     }

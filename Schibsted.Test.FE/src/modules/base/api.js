@@ -6,7 +6,7 @@ class Api {
         opts.body = JSON.stringify(data);
         opts.headers = {
             'Content-Type': 'application/json',
-            //'Authorization': this.authHeader()
+            'Authorization': this.authHeader()
         };
         return new Promise((resolve, reject) =>
             fetch(url, opts).then(this.checkStatus)
@@ -14,7 +14,7 @@ class Api {
                 .then(data => resolve(data))
                 .catch(err => reject(err)));
     }
-    put(url, data) {
+    put(url, data, opts = {}) {
         opts.method = 'PUT';
         opts.body = JSON.stringify(data);
         opts.headers = {
@@ -23,6 +23,7 @@ class Api {
         };
         return new Promise((resolve, reject) =>
             fetch(url, opts).then(this.checkStatus)
+                .then(this.parseJSON)
                 .then(data => resolve(data))
                 .catch(err => reject(err)));
     }
@@ -30,7 +31,7 @@ class Api {
         opts.method = 'GET';
         opts.headers = {
             'Content-Type': 'application/json',
-            // 'Authorization': this.authHeader()
+            'Authorization': this.authHeader()
         };
         return new Promise((resolve, reject) =>
             fetch(url, opts)
@@ -62,7 +63,9 @@ class Api {
     }
 
     parseJSON(response) {
-        return response != undefined ? response.json() : Promise.resolve();
+        return response.text().then(function (text) {
+            return text ? JSON.parse(text) : {}
+        })
     }
     authHeader() {
         let user = JSON.parse(localStorage.getItem('user'));

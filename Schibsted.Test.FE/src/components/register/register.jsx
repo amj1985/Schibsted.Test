@@ -2,14 +2,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import { CheckboxGroup } from '../../components';
+
 class Register extends React.Component {
-    componentWillReceiveProps() {
+
+    componentWillMount() {
         const selectedUser = this.props.history.location.state !== undefined ? this.props.history.location.state.selectedUser : undefined;
-        if(selectedUser) this.props.initialize({email : selectedUser.email });
+        if (selectedUser) this.props.initialize({ email: selectedUser.email })
     }
     onSubmit(data) {
-        debugger;
+        const { updateUser, addUser, history  } = this.props;
+        const selectedUser = this.props.history.location.state !== undefined ? this.props.history.location.state.selectedUser : undefined;
+        if(selectedUser){
+            return updateUser(Object.assign(data, {id : selectedUser.id })).then(() => history.push('/admin'));
+        }
+        else{
+            return addUser(data).then(() => history.push('/admin'));;
+        }
+     
     }
+
     render() {
         const options = [
             { label: 'ADMIN', value: '0' },
@@ -18,7 +29,6 @@ class Register extends React.Component {
             { label: 'PAGE_3', value: '3' }
         ];
         const { handleSubmit } = this.props;
-        const selectedUser = this.props.history.location.state !== undefined ? this.props.history.location.state.selectedUser : undefined; 
         return (
             <div className="col-md-6 col-md-offset-2">
                 <h2>Register</h2>
@@ -30,6 +40,7 @@ class Register extends React.Component {
                             name="email"
                             component="input"
                             type="text"
+
                         />
                     </div>
                     <div className={'form-group'}>
@@ -54,12 +65,10 @@ class Register extends React.Component {
 
 Register = reduxForm({
     form: 'Register',
-    fields: ['email', 'password', 'admin', 'page1', 'page2', 'page3'],
-    enableReinitialize: true,
+    fields: ['email', 'password', 'roles'],
     initialValues: {
         email: undefined,
         password: undefined,
-        selectedUser: {},
         roles: []
     }
 })(Register);
