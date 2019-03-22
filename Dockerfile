@@ -10,11 +10,12 @@ RUN yum install bzip2 -y
 RUN yum groupinstall 'Development Tools' -y
 RUN yum install libudev-devel -y
 RUN npm install -g concurrently
-RUN npm install -g karma-cli
+RUN sudo yum update
+RUN sudo yum install dotnet-sdk-2.2
 
 RUN npm install
 COPY . /usr/src/app/poc_nodeopencv
 
-EXPOSE 3000 5858 3030 4100 9876
+EXPOSE 5001 8080 27017
 
-CMD [ "npm", "run", "start-docker"]
+CMD [ "npm", "run", "start-dev"]

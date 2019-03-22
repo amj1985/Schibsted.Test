@@ -7,7 +7,6 @@ services:
       - "./Schibsted.Test.BE:/usr/src/app/schibstedApp/Schibsted.Test.BE"
       - "./Schibsted.Test.FE:/usr/src/app/schibstedApp/Schibsted.Test.FE"
     ports:
-      - "49160:3000"
-      - "4300:4100"
-      - "6000:5858"
-      - "9875:9876"
+      - "5050:5001"
+      - "8070:8080"
+      - "27017:27017"
