@@ -1,0 +1,9 @@
+export { default as Home } from './home/home';
+export { default as Login } from './login/login';
+export { default as Page1 } from './page1/page1';
+export { default as Page2 } from './page2/page2';
+export { default as Page3 } from './page3/page3';
+export { default as Admin } from './admin/admin';
+export { default as Register } from './register/register';
+export { default as Navigation } from './navigation/navigation';
+export { default as App } from './app/app';
