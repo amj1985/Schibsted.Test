@@ -18,7 +18,6 @@ class Register extends React.Component {
         else{
             return addUser(data).then(() => history.push('/admin'));;
         }
-     
     }
 
     render() {
