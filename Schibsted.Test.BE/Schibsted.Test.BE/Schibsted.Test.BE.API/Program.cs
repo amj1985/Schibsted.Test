@@ -21,7 +21,6 @@ namespace Schibsted.Test.BE.API
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>().ConfigureKestrel((context, options) =>
                 {
-                    // Set properties and call methods on options
                 });
     }
 }

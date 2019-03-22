@@ -15,6 +15,6 @@ namespace Schibsted.Test.BE.Business.Entities.Entities
         public string AccessToken { get; set; }
         public string Email { get; set; }      
         public string Password { get; set; }
-        public IEnumerable<Roles> Roles { get; set; }
+        public IEnumerable<string> Roles { get; set; }
     }
 }

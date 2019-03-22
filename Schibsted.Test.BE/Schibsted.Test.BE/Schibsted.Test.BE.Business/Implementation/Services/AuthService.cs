@@ -1,10 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Schibsted.Test.BE.Business.Entities.DTO;
+using Schibsted.Test.BE.Business.Entities.Enums;
 using Schibsted.Test.BE.Business.Entities.Extensions;
 using Schibsted.Test.BE.Business.Interface.Repositories;
 using Schibsted.Test.BE.Business.Interface.Services;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,17 +28,20 @@ namespace Schibsted.Test.BE.Business.Implementation.Services
             if (user == null) return null;
             if (user.Password == password)
             {
-                var key = Encoding.ASCII.GetBytes("29YWhy4P6gmXkn967TsmuepUNSbxR2pTPj5HubAAsMPquFT"); // ¬¬
+                var key = Encoding.ASCII.GetBytes("29YWhy4P6gmXkn967TsmuepUNSbxR2pTPj5HubAAsMPquFT"); // code smell
                 var tokenHandler = new JwtSecurityTokenHandler();
+                var role = user.Roles.Any(e => e == Roles.Admin) ? Roles.Admin : "READ";
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                      {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                        new Claim(ClaimTypes.Name, user.Id.ToString()),
+                        new Claim(ClaimTypes.Role, role)
                      }),
                     Expires = DateTime.UtcNow.AddMinutes(60), // TODO SET TO 5MIN
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
+
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 user.AccessToken = tokenHandler.WriteToken(token);
                 await _userRepository.PutUserAsync(user);
@@ -51,7 +56,7 @@ namespace Schibsted.Test.BE.Business.Implementation.Services
         public async Task Logout(string email)
         {
             var user = await _userRepository.GetByEmailAsync(email);
-            if(user != null)
+            if (user != null)
             {
                 user.AccessToken = string.Empty;
                 await _userRepository.PutUserAsync(user);

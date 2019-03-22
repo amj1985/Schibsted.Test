@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Schibsted.Test.BE.API.Middleware;
+using Microsoft.IdentityModel.Tokens;
+using Schibsted.Test.BE.API.Config;
 using Schibsted.Test.BE.Business.Implementation.Services;
 using Schibsted.Test.BE.Business.Interface.Repositories;
 using Schibsted.Test.BE.Business.Interface.Services;
@@ -39,16 +35,38 @@ namespace Schibsted.Test.BE.API
                          .AllowAnyOrigin()
                         .AllowCredentials();
             }));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
 
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IContext>(u => new Context(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<IAuthService, AuthService>();
-            services.AddAuthorization();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+         
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Things2Do.UserService.API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "Schibsted.Test.BE.API", Version = "v1" });
             });
         }
 
@@ -72,8 +90,8 @@ namespace Schibsted.Test.BE.API
 
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
+            app.UseAuthentication();
             app.UseMvc();
-            app.UseMiddleware<AuthorizationMiddleware>();
           
         }
     }

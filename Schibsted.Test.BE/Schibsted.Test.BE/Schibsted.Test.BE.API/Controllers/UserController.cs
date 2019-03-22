@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Schibsted.Test.BE.Business.Entities.DTO;
 using Schibsted.Test.BE.Business.Entities.Entities;
+using Schibsted.Test.BE.Business.Entities.Enums;
 using Schibsted.Test.BE.Business.Interface.Services;
 
 namespace Schibsted.Test.BE.API.Controllers
 {
 
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -23,6 +25,7 @@ namespace Schibsted.Test.BE.API.Controllers
         }
         [Route("api/[controller]/getall")]
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<UserDTO>> GetAll()
         {
 
