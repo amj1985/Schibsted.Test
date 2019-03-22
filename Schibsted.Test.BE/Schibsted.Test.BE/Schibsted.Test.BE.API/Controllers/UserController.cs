@@ -19,7 +19,7 @@ namespace Schibsted.Test.BE.API.Controllers
         {
             _userService = userService ?? throw new ArgumentNullException($"{nameof(_userService)} is null");
         }
-        [Route("api/[controller]")]
+        [Route("api/[controller]/getall")]
         [HttpGet]
         public async Task<ActionResult<UserDTO>> GetAll()
         {

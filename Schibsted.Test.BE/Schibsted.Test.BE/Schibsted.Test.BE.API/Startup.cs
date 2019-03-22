@@ -31,14 +31,15 @@ namespace Schibsted.Test.BE.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors(options => options.AddPolicy("CorsPolicy",
             builder =>
             {
-               builder.AllowAnyMethod().AllowAnyHeader()
-                       .AllowAnyOrigin()
-                      .AllowCredentials();
+                builder.AllowAnyMethod().AllowAnyHeader()
+                         .AllowAnyOrigin()
+                        .AllowCredentials();
             }));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddSingleton<IContext>(u => new Context(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IUserService, UserService>();
@@ -68,8 +69,9 @@ namespace Schibsted.Test.BE.API
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
             app.UseCors("CorsPolicy");
+            app.UseMvc();
+          
         }
     }
 }
