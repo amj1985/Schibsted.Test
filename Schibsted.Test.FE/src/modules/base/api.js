@@ -69,7 +69,7 @@ class Api {
     }
     authHeader() {
         let user = JSON.parse(localStorage.getItem('user'));
-        return user && user.accessToken ? { 'Bearer ': user.accessToken } : {};
+        return user && user.accessToken ? ` Bearer ${user.accessToken}` : {};
     }
 }
 export default Api = new Api();

@@ -4,7 +4,8 @@ import { updateUser } from '../../redux/modules/user';
 
 export default class Admin extends React.Component {
     componentWillMount() {
-        const { getUsers } = this.props;
+        const { getUsers, user } = this.props;
+        if(user.roles.includes('ADMIN'))
         return getUsers();
     }
     handleDelete(user) {
@@ -24,7 +25,8 @@ export default class Admin extends React.Component {
     }
     render() {
         const { users, user } = this.props;
-        const message = user.roles.includes('ADMIN')
+        const isAdmin = user.roles.includes('ADMIN');
+        const message = isAdmin
             ? 'You are authorized to see this page'
             : 'You are not authorized to see this page';
 
@@ -32,9 +34,9 @@ export default class Admin extends React.Component {
             <div className="col-md-6 col-md-offset-3">
                 <h1>ADMIN</h1>
                 <h2>{message}!</h2>
-                <button type="button" className="btn btn-warning" onClick={() => this.handleNew()}>ADD</button>
-                {user.roles.includes('ADMIN') &&
+                {isAdmin &&
                     <div>
+                        <button type="button" className="btn btn-warning" onClick={() => this.handleNew()}>ADD</button>
                         <ul className="list-group list-group-flush">
                             {users.map((user, index) => (
                                 <li

@@ -23,10 +23,10 @@ class Register extends React.Component {
 
     render() {
         const options = [
-            { label: 'ADMIN', value: '0' },
-            { label: 'PAGE_1', value: '1' },
-            { label: 'PAGE_2', value: '2' },
-            { label: 'PAGE_3', value: '3' }
+            { label: 'ADMIN', value: 'ADMIN' },
+            { label: 'PAGE_1', value: 'PAGE_1' },
+            { label: 'PAGE_2', value: 'PAGE_2' },
+            { label: 'PAGE_3', value: 'PAGE_3' }
         ];
         const { handleSubmit } = this.props;
         return (
@@ -55,7 +55,7 @@ class Register extends React.Component {
                     <CheckboxGroup name="roles" options={options} />
                     <div className={"form-group"}>
                         <button className="btn btn-primary" type="submit">Submit</button>
-                        <Link to="/login" className="btn btn-link">Logout</Link>
+                        <Link to="/admin" className="btn btn-link">Cancel</Link>
                     </div>
                 </form>
             </div >
