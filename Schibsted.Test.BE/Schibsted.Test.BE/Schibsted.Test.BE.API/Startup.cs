@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Schibsted.Test.BE.API.Config;
+using Schibsted.Test.BE.Business.Entities.Enums;
 using Schibsted.Test.BE.Business.Implementation.Services;
 using Schibsted.Test.BE.Business.Interface.Repositories;
 using Schibsted.Test.BE.Business.Interface.Services;
@@ -63,19 +64,23 @@ namespace Schibsted.Test.BE.API
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
             services.AddSingleton<IContext>(u => new Context(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserService, UserService>();
+            // services.AddScoped<IUserRepository, UserRepository>();
+            // services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
-         
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Schibsted.Test.BE.API", Version = "v1" });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -95,7 +100,15 @@ namespace Schibsted.Test.BE.API
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseMvc();
-          
+            var serviceProvider = app.ApplicationServices;
+            var userService = serviceProvider.GetService<IUserService>();
+            // Mock master user
+            userService.AddUserAsync(new Business.Entities.Entities.User()
+            {
+                Email = "a@a.com",
+                Password = "a",
+                Roles = new string[] { Roles.Admin }
+            });
         }
     }
 }

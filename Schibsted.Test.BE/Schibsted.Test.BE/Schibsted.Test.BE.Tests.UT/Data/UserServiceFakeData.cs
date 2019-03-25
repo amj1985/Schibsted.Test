@@ -49,7 +49,7 @@ namespace Schibsted.Test.BE.Tests.UT.Data
         {
             return Task.Run(() =>
             {
-
+                _users.Add(user);
             });
         }
 
