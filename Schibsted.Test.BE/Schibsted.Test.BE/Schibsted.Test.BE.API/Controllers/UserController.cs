@@ -43,6 +43,7 @@ namespace Schibsted.Test.BE.API.Controllers
         }
         [Route("api/[controller]/{id}")]
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<UserDTO>> Get(string id)
         {
 
@@ -66,6 +67,7 @@ namespace Schibsted.Test.BE.API.Controllers
         }
         [Route("api/[controller]")]
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Post(User user)
         {
             try
@@ -81,6 +83,7 @@ namespace Schibsted.Test.BE.API.Controllers
         }
         [Route("api/[controller]")]
         [HttpPut]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Put(User user)
         {
             try
@@ -96,6 +99,7 @@ namespace Schibsted.Test.BE.API.Controllers
         }
         [Route("api/[controller]/{id}")]
         [HttpDelete]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult> Delete(string id)
         {
             try

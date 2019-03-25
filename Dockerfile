@@ -10,8 +10,9 @@ RUN yum install bzip2 -y
 RUN yum groupinstall 'Development Tools' -y
 RUN yum install libudev-devel -y
 RUN npm install -g concurrently
-RUN sudo yum update
-RUN sudo yum install dotnet-sdk-2.2
+RUN rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm -y
+RUN yum update -y
+RUN yum install dotnet-sdk-2.2
 
 RUN npm install
 COPY . /usr/src/app/poc_nodeopencv
