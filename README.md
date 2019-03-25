@@ -9,5 +9,10 @@ navigate to Schibsted.Test.FE where contains package.json
 npm install  
 npm run start-dev  
 
+master user:  
+email  a@a.com  
+password a  
+
+
 REST API playground  
 https://localhost:5001/swagger/index.html  
