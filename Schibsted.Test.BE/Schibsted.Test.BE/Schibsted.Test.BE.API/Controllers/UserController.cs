@@ -26,7 +26,7 @@ namespace Schibsted.Test.BE.API.Controllers
         [Route("api/[controller]/getall")]
         [HttpGet]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<ActionResult<UserDTO>> GetAll()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll()
         {
 
             try
